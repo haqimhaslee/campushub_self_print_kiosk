@@ -2,7 +2,7 @@
 class KioskStrings {
   KioskStrings._();
 
-  static const String appTitle = 'Campus Hub Self-Print Kiosk';
+  static const String appTitle = 'CH Self-Print Kiosk';
   static const String brandTitle = 'Campus Hub';
   static const String brandSubtitle = 'Autonomous Print Station';
 

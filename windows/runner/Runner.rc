@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "campushub_self_print_kiosk" "\0"
+            VALUE "CompanyName", "Campus Hub" "\0"
+            VALUE "FileDescription", "ch_self_print_kiosk" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "campushub_self_print_kiosk" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "campushub_self_print_kiosk.exe" "\0"
-            VALUE "ProductName", "campushub_self_print_kiosk" "\0"
+            VALUE "InternalName", "ch_self_print_kiosk" "\0"
+            VALUE "LegalCopyright", "Copyright (C) Campus Hub. All rights reserved." "\0"
+            VALUE "OriginalFilename", "ch_self_print_kiosk.exe" "\0"
+            VALUE "ProductName", "CH Self-Print Kiosk" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

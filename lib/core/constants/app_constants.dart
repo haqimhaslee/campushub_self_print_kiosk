@@ -3,11 +3,11 @@ class AppConstants {
   AppConstants._();
 
   // Kiosk Identification
-  static const String kioskId = 'CAMPUS-PRINT-K04';
+  static const String kioskId = 'CH-SPK-UTP-K04';
   static const String kioskName = 'Campus Hub Print Station 04';
-  static const String appVersion = 'v2.4.0 (Windows Kiosk)';
-  static const String campusLocation = 'Central Library • Level 2, Zone B';
-  static const String building = 'Knowledge Complex Block C';
+  static const String appVersion = 'v2.4.0+5';
+  static const String campusLocation = 'Universiti Teknologi PETRONAS';
+  static const String building = 'Nadi@UTP';
 
   // Base Scan-to-Print URL format for QR
   static const String printPortalBaseUrl =

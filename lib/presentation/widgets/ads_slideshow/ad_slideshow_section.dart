@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text_styles.dart';
 import '../../../models/ad_banner_item.dart';
 import '../../../services/mock_kiosk_service.dart';
 import '../common/glass_container_widget.dart';
 import 'ad_carousel_card_widget.dart';
-import 'ad_nav_button_widget.dart';
 import 'ad_page_indicator_widget.dart';
 
-/// The main advertisement & campus bulletin slideshow section of the kiosk UI.
+/// The 16:9 advertisement & campus bulletin slideshow section for see-only digital signage.
 class AdSlideshowSection extends StatefulWidget {
   const AdSlideshowSection({super.key});
 
@@ -17,13 +16,20 @@ class AdSlideshowSection extends StatefulWidget {
   State<AdSlideshowSection> createState() => _AdSlideshowSectionState();
 }
 
-class _AdSlideshowSectionState extends State<AdSlideshowSection> {
+class _AdSlideshowSectionState extends State<AdSlideshowSection>
+    with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController();
   final MockKioskService _kioskService = MockKioskService();
+  late AnimationController _progressController;
 
   @override
   void initState() {
     super.initState();
+    _progressController = AnimationController(
+      vsync: this,
+      duration: AppConstants.adSlideDuration,
+    )..forward();
+
     _kioskService.currentAdIndexNotifier.addListener(_onAdIndexChanged);
   }
 
@@ -37,11 +43,14 @@ class _AdSlideshowSectionState extends State<AdSlideshowSection> {
         curve: Curves.easeInOutCubic,
       );
     }
+    _progressController.reset();
+    _progressController.forward();
   }
 
   @override
   void dispose() {
     _kioskService.currentAdIndexNotifier.removeListener(_onAdIndexChanged);
+    _progressController.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -58,138 +67,71 @@ class _AdSlideshowSectionState extends State<AdSlideshowSection> {
         return ValueListenableBuilder<int>(
           valueListenable: _kioskService.currentAdIndexNotifier,
           builder: (context, currentIndex, child) {
-            return GlassContainerWidget(
-              padding: const EdgeInsets.all(12),
-              borderRadius: 22,
-              child: Stack(
-                children: [
-                  // Carousel View
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: banners.length,
-                      onPageChanged: (index) {
-                        _kioskService.goToAd(index);
-                      },
-                      itemBuilder: (context, index) {
-                        return AdCarouselCardWidget(
-                          item: banners[index],
-                        );
-                      },
-                    ),
-                  ),
-
-                  // Left Navigation Button
-                  Positioned(
-                    left: 20,
-                    top: 0,
-                    bottom: 0,
-                    child: Center(
-                      child: AdNavButtonWidget(
-                        icon: Icons.chevron_left_rounded,
-                        tooltip: 'Previous Announcement',
-                        onTap: () {
-                          _kioskService.previousAd();
+            return AspectRatio(
+              aspectRatio: 16 / 9,
+              child: GlassContainerWidget(
+                padding: const EdgeInsets.all(10),
+                borderRadius: 22,
+                child: Stack(
+                  children: [
+                    // Carousel View (Passive / Hands-Free Signage - No manual swipe required)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: PageView.builder(
+                        controller: _pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: banners.length,
+                        itemBuilder: (context, index) {
+                          return AdCarouselCardWidget(item: banners[index]);
                         },
                       ),
                     ),
-                  ),
 
-                  // Right Navigation Button
-                  Positioned(
-                    right: 20,
-                    top: 0,
-                    bottom: 0,
-                    child: Center(
-                      child: AdNavButtonWidget(
-                        icon: Icons.chevron_right_rounded,
-                        tooltip: 'Next Announcement',
-                        onTap: () {
-                          _kioskService.nextAd();
-                        },
-                      ),
-                    ),
-                  ),
-
-                  // Bottom Controls Bar (Indicators & Slideshow Status)
-                  Positioned(
-                    bottom: 18,
-                    left: 24,
-                    right: 24,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Slide Counter badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.45),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.2),
-                            ),
-                          ),
-                          child: Text(
-                            '${currentIndex + 1} / ${banners.length}',
-                            style: AppTextStyles.labelSmall.copyWith(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-
-                        // Center Page Indicators
-                        AdPageIndicatorWidget(
-                          totalPages: banners.length,
-                          currentIndex: currentIndex,
-                          onPageSelected: (index) {
-                            _kioskService.goToAd(index);
-                          },
-                        ),
-
-                        // Auto-play Toggle Button
-                        ValueListenableBuilder<bool>(
-                          valueListenable: _kioskService.isAutoSlidePlaying,
-                          builder: (context, isPlaying, child) {
-                            return MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _kioskService
-                                      .toggleSlideshowPlay(!isPlaying);
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.45),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: isPlaying
-                                          ? AppColors.primary
-                                          : Colors.white.withOpacity(0.2),
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    isPlaying
-                                        ? Icons.pause_rounded
-                                        : Icons.play_arrow_rounded,
-                                    size: 14,
-                                    color: isPlaying
-                                        ? AppColors.primary
-                                        : Colors.white,
-                                  ),
-                                ),
+                    // Bottom Passive Status & Progress Bar (See-only indicators)
+                    Positioned(
+                      bottom: 14,
+                      left: 18,
+                      right: 18,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Center Page Indicators (Passive)
+                              AdPageIndicatorWidget(
+                                totalPages: banners.length,
+                                currentIndex: currentIndex,
                               ),
-                            );
-                          },
-                        ),
-                      ],
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+
+                          // Slide Cycle Progress Bar Line
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(2),
+                            child: AnimatedBuilder(
+                              animation: _progressController,
+                              builder: (context, child) {
+                                return LinearProgressIndicator(
+                                  value: _progressController.value,
+                                  minHeight: 2.5,
+                                  backgroundColor: Colors.white.withOpacity(
+                                    0.15,
+                                  ),
+                                  valueColor:
+                                      const AlwaysStoppedAnimation<Color>(
+                                        AppColors.primary,
+                                      ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

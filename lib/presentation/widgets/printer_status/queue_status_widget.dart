@@ -65,13 +65,17 @@ class QueueStatusWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      KioskStrings.queueTitle,
-                      style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.textMuted,
-                        fontSize: 10.5,
+                    Flexible(
+                      child: Text(
+                        KioskStrings.queueTitle,
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: AppColors.textMuted,
+                          fontSize: 10.5,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    const SizedBox(width: 6),
                     Text(
                       '${printerStatus.pagesPrintedToday} pages today',
                       style: AppTextStyles.labelSmall.copyWith(

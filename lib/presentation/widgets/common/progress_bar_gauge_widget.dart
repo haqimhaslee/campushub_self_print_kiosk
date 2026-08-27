@@ -36,26 +36,34 @@ class ProgressBarGaugeWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                if (icon != null) ...[
-                  Icon(icon, size: 14, color: activeColor),
-                  const SizedBox(width: 6),
-                ],
-                Text(
-                  label,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w600,
+            Expanded(
+              child: Row(
+                children: [
+                  if (icon != null) ...[
+                    Icon(icon, size: 14, color: activeColor),
+                    const SizedBox(width: 6),
+                  ],
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12.5,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
             Text(
               valueText ?? '$percentage%',
-              style: AppTextStyles.labelLarge.copyWith(
+              style: AppTextStyles.labelSmall.copyWith(
                 color: clampedValue < 0.2 ? AppColors.warning : AppColors.textPrimary,
                 fontWeight: FontWeight.w700,
+                fontSize: 11.5,
               ),
             ),
           ],

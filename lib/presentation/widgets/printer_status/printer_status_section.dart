@@ -22,8 +22,8 @@ class PrinterStatusSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainerWidget(
-      padding: const EdgeInsets.all(22),
-      borderRadius: 22,
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      borderRadius: 20,
       borderColor: AppColors.secondary.withOpacity(0.35),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,23 +36,23 @@ class PrinterStatusSection extends StatelessWidget {
             subtitle: 'Real-time telemetry, paper capacity & toner meters',
             iconColor: AppColors.secondary,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
           // Printer Info & Health
           PrinterInfoCardWidget(printerStatus: printerStatus),
-          const SizedBox(height: 14),
+          const SizedBox(height: 10),
 
           // Live Queue Bar
           QueueStatusWidget(printerStatus: printerStatus),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
           // Paper Tray Levels
           PaperTrayGaugeWidget(printerStatus: printerStatus),
-          const SizedBox(height: 14),
+          const SizedBox(height: 10),
 
           // Toner Cartridges CMYK
           TonerLevelGaugeWidget(printerStatus: printerStatus),
-          const SizedBox(height: 14),
+          const SizedBox(height: 10),
 
           // Hardware Capabilities Chips
           PrinterSpecsGridWidget(printerStatus: printerStatus),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/date_time_helper.dart';
@@ -19,33 +20,21 @@ class LiveClockWidget extends StatelessWidget {
         final now = snapshot.data ?? DateTime.now();
 
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: AppColors.cardSurfaceLight.withOpacity(0.5),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.glassBorderSubtle,
-              width: 1,
-            ),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.schedule_rounded,
-                size: 18,
-                color: AppColors.primary,
-              ),
-              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     DateTimeHelper.formatLiveTime(now),
-                    style: AppTextStyles.titleMedium.copyWith(
+                    style: AppTextStyles.labelLarge.copyWith(
                       fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
+                      fontSize: 17,
                       letterSpacing: 0.5,
                     ),
                   ),

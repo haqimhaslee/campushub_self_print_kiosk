@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+
 import '../../core/theme/app_colors.dart';
 import '../../models/kiosk_info_model.dart';
-import '../../models/printer_status_model.dart';
 import '../../services/mock_kiosk_service.dart';
 import '../widgets/ads_slideshow/ad_slideshow_section.dart';
-import '../widgets/footer/kiosk_footer_widget.dart';
 import '../widgets/header/kiosk_header_widget.dart';
-import '../widgets/printer_status/printer_status_section.dart';
 import '../widgets/qr_scanner/qr_code_section.dart';
 
-/// Main Dashboard Screen for Campus Hub Self-Print Kiosk on Windows.
+/// Main Dashboard Screen for Campus Hub Self-Print Kiosk (See-Only Digital Signage).
 class KioskDashboardScreen extends StatelessWidget {
   const KioskDashboardScreen({super.key});
 
@@ -61,91 +59,108 @@ class KioskDashboardScreen extends StatelessWidget {
             ),
           ),
 
-          // Main Kiosk Surface
+          // Main Kiosk Surface (See-Only Digital Signage Layout - Zero manual scroll/input required)
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 16.0,
+              ),
               child: ValueListenableBuilder<KioskInfoModel>(
                 valueListenable: kioskService.kioskInfoNotifier,
                 builder: (context, kioskInfo, child) {
-                  return ValueListenableBuilder<PrinterStatusModel>(
-                    valueListenable: kioskService.printerNotifier,
-                    builder: (context, printerStatus, child) {
-                      return Column(
-                        children: [
-                          // 1. Top Header Bar
-                          KioskHeaderWidget(kioskInfo: kioskInfo),
-                          const SizedBox(height: 16),
+                  return Column(
+                    children: [
+                      // 1. Top Header Bar (With Brand, Location, Notice Ticker, Clock & Network Status)
+                      KioskHeaderWidget(kioskInfo: kioskInfo),
+                      const SizedBox(height: 16),
 
-                          // 2. Middle Content Grid
-                          Expanded(
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                // Desktop Kiosk layout (wide landscape)
-                                if (constraints.maxWidth > 960) {
-                                  return Row(
+                      // 2. Middle Content Grid (See-Only / No Scroll Required)
+                      Expanded(
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            // Wide Kiosk Display (1080p+ / 1920x1080 Widescreen kiosk monitor)
+                            if (constraints.maxWidth > 1400) {
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  // Left Column: 16:9 Advertisement & Campus Bulletin Carousel
+                                  const Expanded(
+                                    flex: 11,
+                                    child: Center(child: AdSlideshowSection()),
+                                  ),
+                                  const SizedBox(width: 20),
+
+                                  // Right Column: QR Code Scan-To-Print Station
+                                  Expanded(
+                                    flex: 3,
+                                    child: Center(
+                                      child: QrCodeSection(
+                                        kioskInfo: kioskInfo,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else if (constraints.maxWidth > 800) {
+                              // Standard / Mid-width Kiosk Display (2-Column view e.g. 1366x768, 1280x720)
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  // Left Column: 16:9 Ads Slideshow
+                                  const Expanded(
+                                    flex: 6,
+                                    child: Center(child: AdSlideshowSection()),
+                                  ),
+                                  const SizedBox(width: 16),
+
+                                  // Right Column: QR Station
+                                  Expanded(
+                                    flex: 5,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      alignment: Alignment.center,
+                                      child: SizedBox(
+                                        width: 420,
+                                        child: QrCodeSection(
+                                          kioskInfo: kioskInfo,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              // Compact Window Display
+                              return FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.topCenter,
+                                child: SizedBox(
+                                  width: 900,
+                                  child: Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      // Left Column: Advertisement & Campus Bulletin Carousel
                                       const Expanded(
                                         flex: 6,
                                         child: AdSlideshowSection(),
                                       ),
-                                      const SizedBox(width: 18),
-
-                                      // Right Column: QR Code Scan Station & Printer Status
+                                      const SizedBox(width: 14),
                                       Expanded(
                                         flex: 5,
-                                        child: SingleChildScrollView(
-                                          physics:
-                                              const BouncingScrollPhysics(),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              QrCodeSection(
-                                                  kioskInfo: kioskInfo),
-                                              const SizedBox(height: 16),
-                                              PrinterStatusSection(
-                                                printerStatus: printerStatus,
-                                              ),
-                                            ],
-                                          ),
+                                        child: QrCodeSection(
+                                          kioskInfo: kioskInfo,
                                         ),
                                       ),
                                     ],
-                                  );
-                                } else {
-                                  // Fallback for narrower window widths
-                                  return SingleChildScrollView(
-                                    physics: const BouncingScrollPhysics(),
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(
-                                          height: 380,
-                                          child: AdSlideshowSection(),
-                                        ),
-                                        const SizedBox(height: 16),
-                                        QrCodeSection(kioskInfo: kioskInfo),
-                                        const SizedBox(height: 16),
-                                        PrinterStatusSection(
-                                          printerStatus: printerStatus,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // 3. Bottom Footer Bar
-                          const KioskFooterWidget(),
-                        ],
-                      );
-                    },
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),

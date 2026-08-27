@@ -9,15 +9,17 @@ class SupportHelpBadgeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 8,
+      runSpacing: 6,
       children: [
         _buildContactPill(
           icon: Icons.headset_mic_rounded,
           text: KioskStrings.helpdeskHotline,
           color: AppColors.primary,
         ),
-        const SizedBox(width: 10),
         _buildContactPill(
           icon: Icons.chat_rounded,
           text: KioskStrings.whatsappSupport,

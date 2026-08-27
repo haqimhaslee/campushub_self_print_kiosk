@@ -3,14 +3,14 @@ import '../../../core/constants/kiosk_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../models/kiosk_info_model.dart';
-import '../../../services/mock_kiosk_service.dart';
 import '../common/glass_container_widget.dart';
 import '../common/section_header_widget.dart';
+import '../footer/support_help_badge_widget.dart';
 import 'kiosk_code_display_widget.dart';
 import 'qr_code_card_widget.dart';
 import 'scan_step_instruction_widget.dart';
 
-/// The Scan-To-Print QR code interactive station widget.
+/// The Scan-To-Print QR code see-only station widget with assistance & support badges.
 class QrCodeSection extends StatelessWidget {
   final KioskInfoModel kioskInfo;
 
@@ -22,8 +22,8 @@ class QrCodeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainerWidget(
-      padding: const EdgeInsets.all(22),
-      borderRadius: 22,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      borderRadius: 20,
       borderColor: AppColors.primary.withOpacity(0.35),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,7 +36,7 @@ class QrCodeSection extends StatelessWidget {
             subtitle: KioskStrings.scanToPrintSubtitle,
             iconColor: AppColors.primary,
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 10),
 
           // Center Area: QR Code + Kiosk ID
           Center(
@@ -44,20 +44,20 @@ class QrCodeSection extends StatelessWidget {
               children: [
                 QrCodeCardWidget(
                   qrData: kioskInfo.scanQrUrl,
-                  size: 190,
+                  size: 135,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 8),
                 KioskCodeDisplayWidget(kioskId: kioskInfo.kioskId),
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
 
           // Divider
           Divider(color: AppColors.glassBorderSubtle.withOpacity(0.4)),
-          const SizedBox(height: 14),
+          const SizedBox(height: 8),
 
-          // 3 Steps visual instructions
+          // 3 Steps visual instructions (Passive / See-only guide)
           const Column(
             children: [
               ScanStepInstructionWidget(
@@ -66,14 +66,14 @@ class QrCodeSection extends StatelessWidget {
                 title: KioskStrings.step1Title,
                 description: KioskStrings.step1Desc,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 6),
               ScanStepInstructionWidget(
                 stepNumber: 2,
                 icon: Icons.upload_file_rounded,
                 title: KioskStrings.step2Title,
                 description: KioskStrings.step2Desc,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 6),
               ScanStepInstructionWidget(
                 stepNumber: 3,
                 icon: Icons.inventory_2_rounded,
@@ -82,45 +82,38 @@ class QrCodeSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
 
-          // Instant Test Print Action Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                MockKioskService().simulateIncomingPrintJob(
-                  user: 'Student #20240982 (Demo Scan)',
-                  pages: 4,
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary.withOpacity(0.15),
-                foregroundColor: AppColors.primary,
-                side: BorderSide(
-                  color: AppColors.primary.withOpacity(0.4),
-                  width: 1.2,
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.touch_app_rounded, size: 16),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Simulate Mobile Scan & Print',
-                    style: AppTextStyles.labelLarge.copyWith(
-                      color: AppColors.primary,
-                      fontSize: 12,
+          // Support & Assistance (WhatsApp & Helpdesk)
+          Divider(color: AppColors.glassBorderSubtle.withOpacity(0.4)),
+          const SizedBox(height: 8),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.support_agent_rounded,
+                      size: 13,
+                      color: AppColors.textMuted,
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(width: 5),
+                    Text(
+                      'NEED ASSISTANCE?',
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: AppColors.textMuted,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                const SupportHelpBadgeWidget(),
+              ],
             ),
           ),
         ],

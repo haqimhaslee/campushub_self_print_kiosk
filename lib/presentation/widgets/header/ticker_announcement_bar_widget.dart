@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -46,24 +48,19 @@ class _TickerAnnouncementBarWidgetState
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
       decoration: BoxDecoration(
         color: AppColors.backgroundSecondary.withOpacity(0.6),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: AppColors.glassBorderSubtle,
-        ),
+        border: Border.all(color: AppColors.glassBorderSubtle),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
-              color: AppColors.accentTeal.withOpacity(0.15),
+              color: AppColors.accentTeal.withOpacity(0.4),
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: AppColors.accentTeal.withOpacity(0.4),
-              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -78,7 +75,7 @@ class _TickerAnnouncementBarWidgetState
                   'NOTICE',
                   style: AppTextStyles.labelSmall.copyWith(
                     color: AppColors.accentTeal,
-                    fontSize: 9.5,
+                    fontSize: 11,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -87,30 +84,41 @@ class _TickerAnnouncementBarWidgetState
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
-              transitionBuilder: (child, animation) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, 0.3),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: child,
+            child: ClipRect(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                layoutBuilder: (currentChild, previousChildren) {
+                  return Stack(
+                    alignment: Alignment.centerLeft,
+                    children: <Widget>[...previousChildren, ?currentChild],
+                  );
+                },
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.3),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  );
+                },
+                child: SizedBox(
+                  key: ValueKey<int>(_currentIndex),
+                  width: double.infinity,
+                  child: Text(
+                    _notices[_currentIndex],
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                );
-              },
-              child: Text(
-                _notices[_currentIndex],
-                key: ValueKey<int>(_currentIndex),
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w500,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),

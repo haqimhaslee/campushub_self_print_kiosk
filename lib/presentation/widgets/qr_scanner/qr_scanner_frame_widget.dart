@@ -1,102 +1,40 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
-/// Decorative corner reticle brackets and animated laser scanning line painter for the QR code.
-class QrScannerFrameWidget extends StatefulWidget {
+/// Decorative corner reticle brackets frame for the QR code (clean, static display).
+class QrScannerFrameWidget extends StatelessWidget {
   final Widget child;
   final double size;
   final Color cornerColor;
-  final bool animateBeam;
 
   const QrScannerFrameWidget({
     super.key,
     required this.child,
     this.size = 200.0,
     this.cornerColor = AppColors.primary,
-    this.animateBeam = true,
   });
-
-  @override
-  State<QrScannerFrameWidget> createState() => _QrScannerFrameWidgetState();
-}
-
-class _QrScannerFrameWidgetState extends State<QrScannerFrameWidget>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _beamController;
-  late final Animation<double> _beamAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _beamController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2200),
-    )..repeat(reverse: true);
-
-    _beamAnimation = Tween<double>(begin: 0.05, end: 0.95).animate(
-      CurvedAnimation(parent: _beamController, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _beamController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: widget.size,
-      height: widget.size,
+      width: size,
+      height: size,
       child: Stack(
         alignment: Alignment.center,
         children: [
           // Child QR code
-          widget.child,
+          child,
 
-          // Corner brackets painter
+          // Static Corner brackets painter
           Positioned.fill(
             child: CustomPaint(
               painter: _CornerBracketsPainter(
-                color: widget.cornerColor,
+                color: cornerColor,
                 bracketLength: 22,
                 strokeWidth: 3.5,
               ),
             ),
           ),
-
-          // Scanning Beam
-          if (widget.animateBeam)
-            AnimatedBuilder(
-              animation: _beamAnimation,
-              builder: (context, child) {
-                return Positioned(
-                  top: widget.size * _beamAnimation.value,
-                  left: 12,
-                  right: 12,
-                  child: Container(
-                    height: 2.5,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          widget.cornerColor.withOpacity(0.0),
-                          widget.cornerColor,
-                          widget.cornerColor.withOpacity(0.0),
-                        ],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: widget.cornerColor.withOpacity(0.8),
-                          blurRadius: 8,
-                          spreadRadius: 1,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
         ],
       ),
     );
@@ -150,3 +88,4 @@ class _CornerBracketsPainter extends CustomPainter {
         oldDelegate.strokeWidth != strokeWidth;
   }
 }
+

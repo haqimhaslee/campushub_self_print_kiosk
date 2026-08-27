@@ -21,27 +21,34 @@ class TonerLevelGaugeWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                const Icon(
-                  Icons.color_lens_rounded,
-                  size: 14,
-                  color: AppColors.textSecondary,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  KioskStrings.tonerLevelsTitle,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontWeight: FontWeight.w600,
+            Expanded(
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.color_lens_rounded,
+                    size: 14,
+                    color: AppColors.textSecondary,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      KioskStrings.tonerLevelsTitle,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12.5,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(width: 6),
             Text(
               'CMYK Cartridges',
               style: AppTextStyles.bodySmall.copyWith(
                 color: AppColors.textMuted,
-                fontSize: 11,
+                fontSize: 10.5,
               ),
             ),
           ],
