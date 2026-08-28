@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:material_ui/material_ui.dart';
+
 import 'app_colors.dart';
 
 /// ThemeData definitions for the kiosk app.
@@ -21,9 +21,7 @@ class AppTheme {
         onSurface: AppColors.textPrimary,
         onError: Colors.white,
       ),
-      textTheme: GoogleFonts.plusJakartaSansTextTheme(
-        ThemeData.dark().textTheme,
-      ),
+
       cardTheme: CardThemeData(
         color: AppColors.cardSurface,
         elevation: 0,

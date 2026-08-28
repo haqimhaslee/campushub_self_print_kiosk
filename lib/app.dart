@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'core/constants/kiosk_strings.dart';
 import 'core/theme/app_theme.dart';
 import 'presentation/screens/kiosk_dashboard_screen.dart';

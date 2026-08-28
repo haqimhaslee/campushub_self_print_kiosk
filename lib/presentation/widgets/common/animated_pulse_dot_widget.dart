@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// An animated pulsing dot to indicate live heartbeat or active status.
 class AnimatedPulseDotWidget extends StatefulWidget {

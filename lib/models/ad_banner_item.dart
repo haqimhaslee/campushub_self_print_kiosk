@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Represents a single slide item in the advertisement & announcements carousel.
 class AdBannerItem {
